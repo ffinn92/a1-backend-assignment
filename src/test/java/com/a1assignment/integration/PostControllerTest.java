@@ -1,9 +1,7 @@
 package com.a1assignment.integration;
 
 import com.a1assignment.BaseIntegrationTest;
-import com.a1assignment.dto.PostCreateRequest;
-import com.a1assignment.repository.PostRepository;
-import com.a1assignment.service.PostService;
+import com.a1assignment.dto.CreatePostRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,7 +25,7 @@ class PostControllerTest extends BaseIntegrationTest {
             String title = "게시글 작성 테스트_제목";
             String content = "게시글 작성 테스트_본문";
             boolean isChecked = false;
-            PostCreateRequest postCreateRequest = new PostCreateRequest(nickname,
+            CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
                                                                         title,
                                                                         content,
                                                                         isChecked);
@@ -35,7 +33,7 @@ class PostControllerTest extends BaseIntegrationTest {
             //when
             ResultActions resultActions = mockMvc.perform(post("/api/posts")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(postCreateRequest))
+                    .content(objectMapper.writeValueAsString(createPostRequest))
                     .accept(MediaType.APPLICATION_JSON))
                     .andDo(print());
 

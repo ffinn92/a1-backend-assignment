@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostCreateRequest {
+public class CreatePostRequest {
 
     @NotNull(message = "닉네임 입력은 필수 입니다.")
     private String nickname;

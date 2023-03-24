@@ -1,6 +1,6 @@
 package com.a1assignment.service;
 
-import com.a1assignment.dto.PostCreateRequest;
+import com.a1assignment.dto.CreatePostRequest;
 import com.a1assignment.entity.Post;
 import com.a1assignment.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +14,11 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public long createPost(PostCreateRequest postCreateRequest) {
-        Post savedPost = postRepository.save(new Post(postCreateRequest.getNickname(),
-                                                      postCreateRequest.getTitle(),
-                                                      postCreateRequest.getContent(),
-                                                      postCreateRequest.isChecked()));
+    public long createPost(CreatePostRequest createPostRequest) {
+        Post savedPost = postRepository.save(new Post(createPostRequest.getNickname(),
+                                                      createPostRequest.getTitle(),
+                                                      createPostRequest.getContent(),
+                                                      createPostRequest.isChecked()));
         return savedPost.getId();
     }
 }
