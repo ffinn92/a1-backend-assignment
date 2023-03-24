@@ -33,7 +33,7 @@
 
 .gradle
 **/build/
-!backend/**/build/
+!src/**/build/
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
