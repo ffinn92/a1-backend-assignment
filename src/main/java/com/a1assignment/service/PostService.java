@@ -1,10 +1,6 @@
 package com.a1assignment.service;
 
-import com.a1assignment.dto.DeletePostRequest;
-import com.a1assignment.dto.CreatePostRequest;
-import com.a1assignment.dto.ResponseList;
-import com.a1assignment.dto.SearchPostResponse;
-import com.a1assignment.dto.UpdatePostRequest;
+import com.a1assignment.dto.*;
 import com.a1assignment.entity.Post;
 import com.a1assignment.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +28,23 @@ public class PostService {
 
     @Transactional
     public long updatePost(UpdatePostRequest updatePostRequest) {
-        Post post = postRepository.findById(updatePostRequest.getId())
-                .orElseThrow(() -> new NoSuchElementException("해당하는 Post가 없습니다."));
+        Post post = validatIsPostExist(updatePostRequest.getId());
 
         post.updatePost(updatePostRequest.getNickname(),
                              updatePostRequest.getTitle(),
                              updatePostRequest.getContent(),
                              updatePostRequest.isChecked());
+
+        return post.getId();
+    }
+
+    public long updatePostPriority(UpdatePostPriorityRequest updatePostPriorityRequest) {
+        Post post = validatIsPostExist(updatePostPriorityRequest.getId());
+
+        post.updatePostPriority(updatePostPriorityRequest.getNickname(),
+                updatePostPriorityRequest.getTitle(),
+                updatePostPriorityRequest.getContent(),
+                updatePostPriorityRequest.isChecked());
 
         return post.getId();
     }
@@ -78,14 +84,17 @@ public class PostService {
 
         return new ResponseList(searchPostResponses);
     }
-
     @Transactional
     public void deletePost(DeletePostRequest deletePostRequest) {
-        Post post = postRepository.findById(deletePostRequest.getId())
-                .orElseThrow(() -> new NoSuchElementException("해당하는 Post가 없습니다."));
+        Post post = validatIsPostExist(deletePostRequest.getId());
 
         post.delete();
         postRepository.save(post);
+    }
+
+    private Post validatIsPostExist(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 Post가 없습니다."));
     }
 
 }

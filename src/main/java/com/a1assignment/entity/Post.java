@@ -43,6 +43,13 @@ public class Post extends BaseTime {
         this.isChecked = isChecked;
     }
 
+    public void updatePostPriority(String nickname, String title, String content, boolean isChecked) {
+        this.nickname = nickname;
+        this.title = title;
+        this.content = content;
+        this.isChecked = isChecked;
+    }
+
     public void delete() {
         this.isDeleted = true;
     }

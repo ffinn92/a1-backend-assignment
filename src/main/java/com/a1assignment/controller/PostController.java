@@ -1,9 +1,6 @@
 package com.a1assignment.controller;
 
-import com.a1assignment.dto.CreatePostRequest;
-import com.a1assignment.dto.DeletePostRequest;
-import com.a1assignment.dto.ResponseList;
-import com.a1assignment.dto.UpdatePostRequest;
+import com.a1assignment.dto.*;
 import com.a1assignment.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,14 +18,17 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Long> createPost(@Valid @RequestBody CreatePostRequest createPostRequest) {
-        long createdPostId = postService.createPost(createPostRequest);
-        return new ResponseEntity<>(createdPostId, HttpStatus.CREATED);
+        return new ResponseEntity<>(postService.createPost(createPostRequest), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<Long> updatePost(@Valid @RequestBody UpdatePostRequest updatePostRequest) {
-        long updatedPostId = postService.updatePost(updatePostRequest);
-        return new ResponseEntity<>(updatedPostId, HttpStatus.OK);
+        return new ResponseEntity<>(postService.updatePost(updatePostRequest), HttpStatus.OK);
+    }
+
+    @PutMapping("/priority")
+    public ResponseEntity<Long> updatePriority(@Valid @RequestBody UpdatePostPriorityRequest updatePostPriorityRequest) {
+        return new ResponseEntity<>(postService.updatePostPriority(updatePostPriorityRequest), HttpStatus.OK);
     }
 
     @GetMapping
