@@ -41,6 +41,11 @@ public class PostController {
         return new ResponseEntity<>(postService.searchPostsByNickname(nickname), HttpStatus.OK);
     }
 
+    @GetMapping("/title")
+    public ResponseEntity<ResponseList> searchPostsBytitle(@RequestParam String title) {
+        return new ResponseEntity<>(postService.searchPostsByTitle(title), HttpStatus.OK);
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deletePost(@Valid @RequestBody DeletePostRequest deletePostRequest) {
         postService.deletePost(deletePostRequest);

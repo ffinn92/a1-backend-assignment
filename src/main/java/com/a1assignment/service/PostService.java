@@ -67,6 +67,18 @@ public class PostService {
         return new ResponseList(searchPostResponses);
     }
 
+    @Transactional(readOnly = true)
+    public ResponseList searchPostsByTitle(String title) {
+        List<Post> posts = postRepository.findByTitle(title);
+
+        List<SearchPostResponse> searchPostResponses = posts
+                .stream()
+                .map(SearchPostResponse::from)
+                .collect(Collectors.toList());
+
+        return new ResponseList(searchPostResponses);
+    }
+
     @Transactional
     public void deletePost(DeletePostRequest deletePostRequest) {
         Post post = postRepository.findById(deletePostRequest.getId())
@@ -75,4 +87,5 @@ public class PostService {
         post.delete();
         postRepository.save(post);
     }
+
 }
