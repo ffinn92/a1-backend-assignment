@@ -41,14 +41,9 @@ public class PostController {
         return new ResponseEntity<>(postService.searchPosts(), HttpStatus.OK);
     }
 
-    @GetMapping("/nickname")
-    public ResponseEntity<ResponseList> searchPostsByNickname(@RequestParam String nickname) {
-        return new ResponseEntity<>(postService.searchPostsByNickname(nickname), HttpStatus.OK);
-    }
-
-    @GetMapping("/title")
-    public ResponseEntity<ResponseList> searchPostsBytitle(@RequestParam String title) {
-        return new ResponseEntity<>(postService.searchPostsByTitle(title), HttpStatus.OK);
+    @GetMapping("/keywords")
+    public ResponseEntity<ResponseList> searchPostsByKeywords(@RequestParam String keyword) {
+        return new ResponseEntity<>(postService.searchPostsByKeywords(keyword), HttpStatus.OK);
     }
 
     @DeleteMapping

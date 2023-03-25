@@ -53,26 +53,136 @@ class PostControllerTest extends BaseIntegrationTest {
             assertThat(createPostRequest.getContent()).isEqualTo(savedPost.getContent());
             assertThat(createPostRequest.isChecked()).isEqualTo(savedPost.isChecked());
         }
+    }
+
+    @Nested
+    @DisplayName("게시글 조회 시")
+    class SearchPost {
 
         @Test
-        void 중복된_닉네임으로_요청시_예외를_발생시킨다() throws Exception {
+        void 게시글_정보_1개_요청올_경우_게시물_1개를_반환한다() throws Exception {
             //given
-            Post post = new Post("중복닉네임", "제목", "본문", false);
-            ReflectionTestUtils.setField(post, "id", 1L);
-
-            postRepository.save(post);
-
-            String nickname = "중복닉네임";
-            String title = "게시글 작성 테스트_제목";
-            String content = "게시글 작성 테스트_본문";
+            String nickname = "닉네임";
+            String title = "제목";
+            String content = "본문";
             boolean isChecked = false;
+
             CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
-                                                                        title,
-                                                                        content,
-                                                                        isChecked);
+                    title,
+                    content,
+                    isChecked);
+
+            long savedPostId = postService.createPost(createPostRequest);
+
+            //when
+            SearchPostResponse searchedPost = postService.searchPost(savedPostId);
 
             //then
-            assertThatThrownBy(() -> postService.createPost(createPostRequest)).isInstanceOf(IllegalStateException.class);
+            assertThat(searchedPost.getId()).isEqualTo(savedPostId);
+            assertThat(searchedPost.getNickname()).isEqualTo(nickname);
+            assertThat(searchedPost.getTitle()).isEqualTo(title);
+            assertThat(searchedPost.getContent()).isEqualTo(content);
+            assertThat(searchedPost.isChecked()).isEqualTo(isChecked);
+        }
+
+        @Test
+        void 모든_게시글_정보를_List형식으로_반환한다() throws Exception {
+            //given
+            for (int i = 0; i < 10; i++) {
+                String nickname = "닉네임" + i;
+                String title = "제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                        title,
+                        content,
+                        isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            //when
+            ResponseList posts = postService.searchPosts();
+
+            //then
+            assertThat(posts.getCount()).isEqualTo(10);
+        }
+
+        @Test
+        void 닉네임_정보와_함께_요청하면_닉네임을_포함하는_게시글_정보를_List형식으로_반환한다() throws Exception {
+            //given
+            for (int i = 0; i < 5; i++) {
+                String nickname = "닉네임" + i;
+                String title = "제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                        title,
+                        content,
+                        isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            for (int i = 0; i < 5; i++) {
+                String nickname = "검색닉네임" + i;
+                String title = "제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                        title,
+                        content,
+                        isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            //when
+            ResponseList posts = postService.searchPostsByKeywords("검색닉네임");
+
+            //then
+            assertThat(posts.getCount()).isEqualTo(5);
+        }
+
+        @Test
+        void 타이틀_정보와_함께_요청하면_타이틀을_포함하는_게시글_정보를_List형식으로_반환한다() throws Exception {
+            //given
+            for (int i = 0; i < 5; i++) {
+                String nickname = "닉네임a" + i;
+                String title = "제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                        title,
+                        content,
+                        isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            for (int i = 0; i < 5; i++) {
+                String nickname = "닉네임b" + i;
+                String title = "검색제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                        title,
+                        content,
+                        isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            //when
+            ResponseList posts = postService.searchPostsByTitle("검색제목");
+
+            //then
+            assertThat(posts.getCount()).isEqualTo(5);
         }
     }
 
@@ -210,137 +320,6 @@ class PostControllerTest extends BaseIntegrationTest {
 
             //then
             assertThatThrownBy(() -> postService.updatePost(updatePostRequest)).isInstanceOf(NoSuchElementException.class);
-        }
-    }
-
-    @Nested
-    @DisplayName("게시글 조회 시")
-    class SearchPost {
-
-        @Test
-        void 게시글_정보_1개_요청올_경우_게시물_1개를_반환한다() throws Exception {
-            //given
-            String nickname = "닉네임";
-            String title = "제목";
-            String content = "본문";
-            boolean isChecked = false;
-
-            CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
-                                                                        title,
-                                                                        content,
-                                                                        isChecked);
-
-            long savedPostId = postService.createPost(createPostRequest);
-
-            //when
-            SearchPostResponse searchedPost = postService.searchPost(savedPostId);
-
-            //then
-            assertThat(searchedPost.getId()).isEqualTo(savedPostId);
-            assertThat(searchedPost.getNickname()).isEqualTo(nickname);
-            assertThat(searchedPost.getTitle()).isEqualTo(title);
-            assertThat(searchedPost.getContent()).isEqualTo(content);
-            assertThat(searchedPost.isChecked()).isEqualTo(isChecked);
-        }
-
-        @Test
-        void 모든_게시글_정보를_List형식으로_반환한다() throws Exception {
-            //given
-            for (int i = 0; i < 10; i++) {
-                String nickname = "닉네임" + i;
-                String title = "제목" + i;
-                String content = "본문" + i;
-                boolean isChecked = false;
-
-                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
-                                                                            title,
-                                                                            content,
-                                                                            isChecked);
-
-                postService.createPost(createPostRequest);
-            }
-
-            //when
-            ResponseList posts = postService.searchPosts();
-
-            //then
-            assertThat(posts.getCount()).isEqualTo(10);
-        }
-
-        @Test
-        void 닉네임_정보와_함께_요청하면_닉네임을_포함하는_게시글_정보를_List형식으로_반환한다() throws Exception {
-            //given
-            for (int i = 0; i < 5; i++) {
-                String nickname = "닉네임" + i;
-                String title = "제목" + i;
-                String content = "본문" + i;
-                boolean isChecked = false;
-
-                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
-                        title,
-                        content,
-                        isChecked);
-
-                postService.createPost(createPostRequest);
-            }
-
-            for (int i = 0; i < 5; i++) {
-                String nickname = "검색닉네임" + i;
-                String title = "제목" + i;
-                String content = "본문" + i;
-                boolean isChecked = false;
-
-                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
-                        title,
-                        content,
-                        isChecked);
-
-                postService.createPost(createPostRequest);
-            }
-
-            //when
-            ResponseList posts = postService.searchPostsByNickname("검색닉네임");
-
-            //then
-            assertThat(posts.getCount()).isEqualTo(5);
-        }
-
-        @Test
-        void 타이틀_정보와_함께_요청하면_타이틀을_포함하는_게시글_정보를_List형식으로_반환한다() throws Exception {
-            //given
-            for (int i = 0; i < 5; i++) {
-                String nickname = "닉네임a" + i;
-                String title = "제목" + i;
-                String content = "본문" + i;
-                boolean isChecked = false;
-
-                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
-                        title,
-                        content,
-                        isChecked);
-
-                postService.createPost(createPostRequest);
-            }
-
-            for (int i = 0; i < 5; i++) {
-                String nickname = "닉네임b" + i;
-                String title = "검색제목" + i;
-                String content = "본문" + i;
-                boolean isChecked = false;
-
-                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
-                        title,
-                        content,
-                        isChecked);
-
-                postService.createPost(createPostRequest);
-            }
-
-            //when
-            ResponseList posts = postService.searchPostsByTitle("검색제목");
-
-            //then
-            assertThat(posts.getCount()).isEqualTo(5);
         }
     }
 

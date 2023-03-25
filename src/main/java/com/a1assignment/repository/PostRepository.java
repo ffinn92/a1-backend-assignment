@@ -12,11 +12,8 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("SELECT p FROM Post p WHERE p.nickname LIKE %:nickname%")
-    List<Post> findPostsByNickname(@Param("nickname") String nickname);
-
-    @Query("SELECT p FROM Post p WHERE p.title LIKE %:title%")
-    List<Post> findPostsByTitle(@Param("title") String title);
+    @Query("SELECT p FROM Post p WHERE p.nickname LIKE %:keyword% OR p.title LIKE %:keyword%")
+    List<Post> findPostsByKeywords(@Param("keyword") String keyword);
 
     Optional<Post> findByNickname(String nickname);
 }
