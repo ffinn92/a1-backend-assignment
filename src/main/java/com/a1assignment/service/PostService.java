@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +20,7 @@ public class PostService {
 
     @Transactional
     public long createPost(CreatePostRequest createPostRequest) {
+        validateDuplicateNickname(createPostRequest);
         Post savedPost = postRepository.save(new Post(createPostRequest.getNickname(),
                                                       createPostRequest.getTitle(),
                                                       createPostRequest.getContent(),
@@ -28,7 +30,7 @@ public class PostService {
 
     @Transactional
     public long updatePost(UpdatePostRequest updatePostRequest) {
-        Post post = validatIsPostExist(updatePostRequest.getId());
+        Post post = validateIsPostExist(updatePostRequest.getId());
 
         post.updatePost(updatePostRequest.getNickname(),
                              updatePostRequest.getTitle(),
@@ -39,7 +41,7 @@ public class PostService {
     }
 
     public long updatePostPriority(UpdatePostPriorityRequest updatePostPriorityRequest) {
-        Post post = validatIsPostExist(updatePostPriorityRequest.getId());
+        Post post = validateIsPostExist(updatePostPriorityRequest.getId());
 
         post.updatePostPriority(updatePostPriorityRequest.getNickname(),
                 updatePostPriorityRequest.getTitle(),
@@ -63,7 +65,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public ResponseList searchPostsByNickname(String nickname) {
-        List<Post> posts = postRepository.findByNickname(nickname);
+        List<Post> posts = postRepository.findPostsByNickname(nickname);
 
         List<SearchPostResponse> searchPostResponses = posts
                 .stream()
@@ -75,7 +77,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public ResponseList searchPostsByTitle(String title) {
-        List<Post> posts = postRepository.findByTitle(title);
+        List<Post> posts = postRepository.findPostsByTitle(title);
 
         List<SearchPostResponse> searchPostResponses = posts
                 .stream()
@@ -84,17 +86,23 @@ public class PostService {
 
         return new ResponseList(searchPostResponses);
     }
+
     @Transactional
     public void deletePost(DeletePostRequest deletePostRequest) {
-        Post post = validatIsPostExist(deletePostRequest.getId());
+        Post post = validateIsPostExist(deletePostRequest.getId());
 
         post.delete();
         postRepository.save(post);
     }
-
-    private Post validatIsPostExist(Long id) {
+    private Post validateIsPostExist(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 Post가 없습니다."));
     }
 
+
+    private void validateDuplicateNickname(CreatePostRequest createPostRequest) {
+        if(!Objects.isNull(postRepository.findByName(createPostRequest.getNickname()).orElse(null))) {
+            throw new IllegalStateException("중복된 닉네임입니다.");
+        }
+    }
 }
