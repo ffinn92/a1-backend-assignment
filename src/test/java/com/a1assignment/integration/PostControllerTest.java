@@ -133,6 +133,42 @@ class PostControllerTest extends BaseIntegrationTest {
         }
 
         @Test
+        void 중요도_체크여부_정보를_전달받으면_기존_게시글의_중요도정보를_수정하여_저장한다() throws Exception {
+            //given
+            Long id = 1L;
+            String nickname = "게시글 수정 테스트_기존 닉네임";
+            String title = "게시글 수정 테스트_기존 제목";
+            String content = "게시글 수정 테스트_기존 본문";
+            boolean isChecked = false;
+
+            Post post = new Post(nickname, title, content, isChecked);
+            ReflectionTestUtils.setField(post, "id", id);
+
+            Post savedPost = postRepository.save(post);
+
+            boolean isCheckedUpate = true;
+            UpdatePostRequest updatePostRequest = new UpdatePostRequest(savedPost.getId(),
+                    savedPost.getNickname(),
+                    savedPost.getTitle(),
+                    savedPost.getContent(),
+                    isCheckedUpate);
+
+            //when
+            long updatedPostId = postService.updatePost(updatePostRequest);
+
+            //then
+            Post updatedPost = postRepository.findById(updatedPostId).orElseThrow();
+            List<Post> posts = postRepository.findAll();
+            assertThat(posts.size()).isEqualTo(1);
+            assertThat(updatePostRequest.getId()).isEqualTo(updatedPost.getId());
+            assertThat(updatePostRequest.getNickname()).isEqualTo(updatedPost.getNickname());
+            assertThat(updatePostRequest.getTitle()).isEqualTo(updatedPost.getTitle());
+            assertThat(updatePostRequest.getContent()).isEqualTo(updatedPost.getContent());
+            assertThat(updatePostRequest.isChecked()).isEqualTo(updatedPost.isChecked());
+            assertThat(updatePostRequest.isChecked()).isTrue();
+        }
+
+        @Test
         void 유효하지_않은_게시글_id로_수정요청시_예외를_발생시킨다() throws Exception {
             //given
             Long id = 1L;
