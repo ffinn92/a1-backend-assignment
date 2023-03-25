@@ -1,6 +1,7 @@
 package com.a1assignment.controller;
 
 import com.a1assignment.dto.CreatePostRequest;
+import com.a1assignment.dto.DeletePostRequest;
 import com.a1assignment.dto.RequestList;
 import com.a1assignment.dto.UpdatePostRequest;
 import com.a1assignment.service.PostService;
@@ -33,5 +34,11 @@ public class PostController {
     @GetMapping
     public ResponseEntity<RequestList> searchPosts() {
         return new ResponseEntity<>(postService.searchPosts(), HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deletePost(@Valid @RequestBody DeletePostRequest deletePostRequest) {
+        postService.deletePost(deletePostRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

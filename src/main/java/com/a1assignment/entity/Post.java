@@ -42,4 +42,8 @@ public class Post extends BaseTime {
         this.content = content;
         this.isChecked = isChecked;
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

@@ -1,5 +1,6 @@
 package com.a1assignment.service;
 
+import com.a1assignment.dto.DeletePostRequest;
 import com.a1assignment.dto.CreatePostRequest;
 import com.a1assignment.dto.RequestList;
 import com.a1assignment.dto.SearchPostResponse;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,15 +33,15 @@ public class PostService {
 
     @Transactional
     public long updatePost(UpdatePostRequest updatePostRequest) {
-        Post foundPost = postRepository.findById(updatePostRequest.getId())
+        Post post = postRepository.findById(updatePostRequest.getId())
                 .orElseThrow(() -> new NoSuchElementException("해당하는 Post가 없습니다."));
 
-        foundPost.updatePost(updatePostRequest.getNickname(),
+        post.updatePost(updatePostRequest.getNickname(),
                              updatePostRequest.getTitle(),
                              updatePostRequest.getContent(),
                              updatePostRequest.isChecked());
 
-        return foundPost.getId();
+        return post.getId();
     }
 
     @Transactional(readOnly = true)
@@ -52,5 +54,14 @@ public class PostService {
                 .collect(Collectors.toList());
 
         return new RequestList(searchPostResponses);
+    }
+
+    @Transactional
+    public void deletePost(DeletePostRequest deletePostRequest) {
+        Post post = postRepository.findById(deletePostRequest.getId())
+                .orElseThrow(() -> new NoSuchElementException("해당하는 Post가 없습니다."));
+
+        post.delete();
+        postRepository.save(post);
     }
 }
