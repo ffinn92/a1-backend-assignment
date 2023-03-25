@@ -51,13 +51,17 @@ public class PostService {
         return post.getId();
     }
 
+    public SearchPostResponse searchPost(Long id) {
+        return SearchPostResponse.searchPost(validateIsPostExist(id));
+    }
+
     @Transactional(readOnly = true)
     public ResponseList searchPosts() {
         List<Post> posts = postRepository.findAll();
 
         List<SearchPostResponse> searchPostResponses = posts
                 .stream()
-                .map(SearchPostResponse::from)
+                .map(SearchPostResponse::searchPosts)
                 .collect(Collectors.toList());
 
         return new ResponseList(searchPostResponses);
@@ -69,7 +73,7 @@ public class PostService {
 
         List<SearchPostResponse> searchPostResponses = posts
                 .stream()
-                .map(SearchPostResponse::from)
+                .map(SearchPostResponse::searchPosts)
                 .collect(Collectors.toList());
 
         return new ResponseList(searchPostResponses);
@@ -81,7 +85,7 @@ public class PostService {
 
         List<SearchPostResponse> searchPostResponses = posts
                 .stream()
-                .map(SearchPostResponse::from)
+                .map(SearchPostResponse::searchPosts)
                 .collect(Collectors.toList());
 
         return new ResponseList(searchPostResponses);
@@ -98,7 +102,6 @@ public class PostService {
         return postRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 Post가 없습니다."));
     }
-
 
     private void validateDuplicateNickname(CreatePostRequest createPostRequest) {
         if(!Objects.isNull(postRepository.findByNickname(createPostRequest.getNickname()).orElse(null))) {

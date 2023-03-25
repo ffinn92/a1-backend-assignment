@@ -31,6 +31,11 @@ public class PostController {
         return new ResponseEntity<>(postService.updatePostPriority(updatePostPriorityRequest), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<SearchPostResponse> searchPost(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(postService.searchPost(id), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<ResponseList> searchPosts() {
         return new ResponseEntity<>(postService.searchPosts(), HttpStatus.OK);
