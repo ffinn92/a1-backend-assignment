@@ -1,6 +1,7 @@
 package com.a1assignment.controller;
 
 import com.a1assignment.dto.CreatePostRequest;
+import com.a1assignment.dto.UpdatePostRequest;
 import com.a1assignment.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,5 +21,11 @@ public class PostController {
     public ResponseEntity<Long> createPost(@Valid @RequestBody CreatePostRequest createPostRequest) {
         long createdPostId = postService.createPost(createPostRequest);
         return new ResponseEntity<>(createdPostId, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/posts")
+    public ResponseEntity<Long> updatePost(@Valid @RequestBody UpdatePostRequest updatePostRequest) {
+        long updatedPostId = postService.updatePost(updatePostRequest);
+        return new ResponseEntity<>(updatedPostId, HttpStatus.OK);
     }
 }
