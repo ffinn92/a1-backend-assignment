@@ -179,7 +179,7 @@ class PostControllerTest extends BaseIntegrationTest {
             }
 
             //when
-            ResponseList posts = postService.searchPostsByTitle("검색제목");
+            ResponseList posts = postService.searchPostsByKeywords("검색제목");
 
             //then
             assertThat(posts.getCount()).isEqualTo(5);
