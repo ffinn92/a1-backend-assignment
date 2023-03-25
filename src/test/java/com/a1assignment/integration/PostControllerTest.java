@@ -1,10 +1,7 @@
 package com.a1assignment.integration;
 
 import com.a1assignment.BaseIntegrationTest;
-import com.a1assignment.dto.CreatePostRequest;
-import com.a1assignment.dto.DeletePostRequest;
-import com.a1assignment.dto.ResponseList;
-import com.a1assignment.dto.UpdatePostRequest;
+import com.a1assignment.dto.*;
 import com.a1assignment.entity.Post;
 import com.a1assignment.repository.PostRepository;
 import com.a1assignment.service.PostService;
@@ -221,6 +218,32 @@ class PostControllerTest extends BaseIntegrationTest {
     class SearchPost {
 
         @Test
+        void 게시글_정보_1개_요청올_경우_게시물_1개를_반환한다() throws Exception {
+            //given
+            String nickname = "닉네임";
+            String title = "제목";
+            String content = "본문";
+            boolean isChecked = false;
+
+            CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                                                                        title,
+                                                                        content,
+                                                                        isChecked);
+
+            long savedPostId = postService.createPost(createPostRequest);
+
+            //when
+            SearchPostResponse searchedPost = postService.searchPost(savedPostId);
+
+            //then
+            assertThat(searchedPost.getId()).isEqualTo(savedPostId);
+            assertThat(searchedPost.getNickname()).isEqualTo(nickname);
+            assertThat(searchedPost.getTitle()).isEqualTo(title);
+            assertThat(searchedPost.getContent()).isEqualTo(content);
+            assertThat(searchedPost.isChecked()).isEqualTo(isChecked);
+        }
+
+        @Test
         void 모든_게시글_정보를_List형식으로_반환한다() throws Exception {
             //given
             for (int i = 0; i < 10; i++) {
@@ -286,7 +309,7 @@ class PostControllerTest extends BaseIntegrationTest {
         void 타이틀_정보와_함께_요청하면_타이틀을_포함하는_게시글_정보를_List형식으로_반환한다() throws Exception {
             //given
             for (int i = 0; i < 5; i++) {
-                String nickname = "닉네임" + i;
+                String nickname = "닉네임a" + i;
                 String title = "제목" + i;
                 String content = "본문" + i;
                 boolean isChecked = false;
@@ -300,7 +323,7 @@ class PostControllerTest extends BaseIntegrationTest {
             }
 
             for (int i = 0; i < 5; i++) {
-                String nickname = "닉네임" + i;
+                String nickname = "닉네임b" + i;
                 String title = "검색제목" + i;
                 String content = "본문" + i;
                 boolean isChecked = false;
