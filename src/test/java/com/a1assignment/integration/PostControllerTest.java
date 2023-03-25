@@ -2,6 +2,7 @@ package com.a1assignment.integration;
 
 import com.a1assignment.BaseIntegrationTest;
 import com.a1assignment.dto.CreatePostRequest;
+import com.a1assignment.dto.RequestList;
 import com.a1assignment.dto.UpdatePostRequest;
 import com.a1assignment.entity.Post;
 import com.a1assignment.repository.PostRepository;
@@ -154,6 +155,35 @@ class PostControllerTest extends BaseIntegrationTest {
 
             //then
             assertThatThrownBy(() -> postService.updatePost(updatePostRequest)).isInstanceOf(NoSuchElementException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("게시글 조회 시")
+    class SearchPost {
+
+        @Test
+        void 게시글_정보를_List형식으로_반환한다() throws Exception {
+            //given
+            for (int i = 0; i < 10; i++) {
+                String nickname = "닉네임" + i;
+                String title = "제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                                                                            title,
+                                                                            content,
+                                                                            isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            //when
+            RequestList posts = postService.searchPosts();
+
+            //then
+            assertThat(posts.getCount()).isEqualTo(10);
         }
     }
 }
