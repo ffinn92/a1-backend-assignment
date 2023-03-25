@@ -3,7 +3,7 @@ package com.a1assignment.integration;
 import com.a1assignment.BaseIntegrationTest;
 import com.a1assignment.dto.CreatePostRequest;
 import com.a1assignment.dto.DeletePostRequest;
-import com.a1assignment.dto.RequestList;
+import com.a1assignment.dto.ResponseList;
 import com.a1assignment.dto.UpdatePostRequest;
 import com.a1assignment.entity.Post;
 import com.a1assignment.repository.PostRepository;
@@ -164,7 +164,7 @@ class PostControllerTest extends BaseIntegrationTest {
     class SearchPost {
 
         @Test
-        void 게시글_정보를_List형식으로_반환한다() throws Exception {
+        void 모든_게시글_정보를_List형식으로_반환한다() throws Exception {
             //given
             for (int i = 0; i < 10; i++) {
                 String nickname = "닉네임" + i;
@@ -181,10 +181,48 @@ class PostControllerTest extends BaseIntegrationTest {
             }
 
             //when
-            RequestList posts = postService.searchPosts();
+            ResponseList posts = postService.searchPosts();
 
             //then
             assertThat(posts.getCount()).isEqualTo(10);
+        }
+
+        @Test
+        void 닉네임_정보와_함께_요청하면_닉네임을_포함하는_게시글_정보를_List형식으로_반환한다() throws Exception {
+            //given
+            for (int i = 0; i < 5; i++) {
+                String nickname = "닉네임" + i;
+                String title = "제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                        title,
+                        content,
+                        isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            for (int i = 0; i < 5; i++) {
+                String nickname = "검색닉네임" + i;
+                String title = "제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                        title,
+                        content,
+                        isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            //when
+            ResponseList posts = postService.searchPostsByNickname("검색닉네임");
+
+            //then
+            assertThat(posts.getCount()).isEqualTo(5);
         }
     }
 
