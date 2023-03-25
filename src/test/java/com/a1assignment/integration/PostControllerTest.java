@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,6 +47,8 @@ class PostControllerTest extends BaseIntegrationTest {
 
             //then
             Post savedPost = postRepository.findById(savedPostId).orElseThrow();
+            List<Post> posts = postRepository.findAll();
+            assertThat(posts.size()).isEqualTo(1);
             assertThat(createPostRequest.getNickname()).isEqualTo(savedPost.getNickname());
             assertThat(createPostRequest.getTitle()).isEqualTo(savedPost.getTitle());
             assertThat(createPostRequest.getContent()).isEqualTo(savedPost.getContent());
@@ -83,6 +86,8 @@ class PostControllerTest extends BaseIntegrationTest {
 
             //then
             Post updatedPost = postRepository.findById(updatedPostId).orElseThrow();
+            List<Post> posts = postRepository.findAll();
+            assertThat(posts.size()).isEqualTo(1);
             assertThat(updatePostRequest.getId()).isEqualTo(updatedPost.getId());
             assertThat(updatePostRequest.getNickname()).isEqualTo(updatedPost.getNickname());
             assertThat(updatePostRequest.getTitle()).isEqualTo(updatedPost.getTitle());
@@ -116,6 +121,8 @@ class PostControllerTest extends BaseIntegrationTest {
 
             //then
             Post updatedPost = postRepository.findById(updatedPostId).orElseThrow();
+            List<Post> posts = postRepository.findAll();
+            assertThat(posts.size()).isEqualTo(1);
             assertThat(updatePostRequest.getId()).isEqualTo(updatedPost.getId());
             assertThat(updatePostRequest.getNickname()).isEqualTo(updatedPost.getNickname());
             assertThat(updatePostRequest.getTitle()).isEqualTo(updatedPost.getTitle());
