@@ -2,6 +2,7 @@ package com.a1assignment.integration;
 
 import com.a1assignment.BaseIntegrationTest;
 import com.a1assignment.dto.CreatePostRequest;
+import com.a1assignment.dto.DeletePostRequest;
 import com.a1assignment.dto.RequestList;
 import com.a1assignment.dto.UpdatePostRequest;
 import com.a1assignment.entity.Post;
@@ -146,7 +147,7 @@ class PostControllerTest extends BaseIntegrationTest {
             Post savedPost = postRepository.save(post);
 
             String updateContent = "게시글 수정 테스트_수정 본문";
-            Long invalidId = 2L;
+            Long invalidId = 2000L;
             UpdatePostRequest updatePostRequest = new UpdatePostRequest(invalidId,
                                                                         savedPost.getNickname(),
                                                                         savedPost.getTitle(),
@@ -184,6 +185,55 @@ class PostControllerTest extends BaseIntegrationTest {
 
             //then
             assertThat(posts.getCount()).isEqualTo(10);
+        }
+    }
+
+    @Nested
+    @DisplayName("게시글 삭제 시")
+    class DeletePost {
+
+        @Test
+        void 게시글_정보를_전달받으면_해당_게시글을_삭제한다() throws Exception {
+            //given
+            String nickname = "게시글 작성 테스트_닉네임";
+            String title = "게시글 작성 테스트_제목";
+            String content = "게시글 작성 테스트_본문";
+            boolean isChecked = false;
+            CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                    title,
+                    content,
+                    isChecked);
+
+            long savedPostId = postService.createPost(createPostRequest);
+            DeletePostRequest deletePostRequest = new DeletePostRequest(savedPostId);
+
+            //when
+            postService.deletePost(deletePostRequest);
+
+            //then
+            Post deletedPost = postRepository.findById(savedPostId).orElseThrow();
+            assertThat(deletedPost.isDeleted()).isTrue();
+        }
+
+        @Test
+        void 유효하지_않은_게시글_id로_삭제요청시_예외를_발생시킨다() throws Exception {
+            //given
+            Long id = 1L;
+            String nickname = "게시글 수정 테스트_기존 닉네임";
+            String title = "게시글 수정 테스트_기존 제목";
+            String content = "게시글 수정 테스트_기존 본문";
+            boolean isChecked = false;
+
+            Post post = new Post(nickname, title, content, isChecked);
+            ReflectionTestUtils.setField(post, "id", id);
+
+            postRepository.save(post);
+            Long invalidId = 2000L;
+
+            DeletePostRequest deletePostRequest = new DeletePostRequest(invalidId);
+
+            //then
+            assertThatThrownBy(() -> postService.deletePost(deletePostRequest)).isInstanceOf(NoSuchElementException.class);
         }
     }
 }
