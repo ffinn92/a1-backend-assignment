@@ -56,6 +56,27 @@ class PostControllerTest extends BaseIntegrationTest {
             assertThat(createPostRequest.getContent()).isEqualTo(savedPost.getContent());
             assertThat(createPostRequest.isChecked()).isEqualTo(savedPost.isChecked());
         }
+
+        @Test
+        void 중복된_닉네임으로_요청시_예외를_발생시킨다() throws Exception {
+            //given
+            Post post = new Post("중복닉네임", "제목", "본문", false);
+            ReflectionTestUtils.setField(post, "id", 1L);
+
+            postRepository.save(post);
+
+            String nickname = "중복닉네임";
+            String title = "게시글 작성 테스트_제목";
+            String content = "게시글 작성 테스트_본문";
+            boolean isChecked = false;
+            CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                                                                        title,
+                                                                        content,
+                                                                        isChecked);
+
+            //then
+            assertThatThrownBy(() -> postService.createPost(createPostRequest)).isInstanceOf(IllegalStateException.class);
+        }
     }
 
     @Nested
