@@ -2,7 +2,7 @@ package com.a1assignment.controller;
 
 import com.a1assignment.dto.CreatePostRequest;
 import com.a1assignment.dto.DeletePostRequest;
-import com.a1assignment.dto.RequestList;
+import com.a1assignment.dto.ResponseList;
 import com.a1assignment.dto.UpdatePostRequest;
 import com.a1assignment.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +32,13 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<RequestList> searchPosts() {
+    public ResponseEntity<ResponseList> searchPosts() {
         return new ResponseEntity<>(postService.searchPosts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/nickname")
+    public ResponseEntity<ResponseList> searchPostsByNickname(@RequestParam String nickname) {
+        return new ResponseEntity<>(postService.searchPostsByNickname(nickname), HttpStatus.OK);
     }
 
     @DeleteMapping

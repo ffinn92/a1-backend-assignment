@@ -5,12 +5,12 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class RequestList<T> {
+public class ResponseList<T> {
 
     private final Integer count;
     private final List<T> content;
 
-    public RequestList(List<T> content) {
+    public ResponseList(List<T> content) {
         this.count = content.size();
         this.content = content;
     }
