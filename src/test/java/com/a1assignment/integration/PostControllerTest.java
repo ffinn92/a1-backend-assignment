@@ -224,6 +224,44 @@ class PostControllerTest extends BaseIntegrationTest {
             //then
             assertThat(posts.getCount()).isEqualTo(5);
         }
+
+        @Test
+        void 타이틀_정보와_함께_요청하면_타이틀을_포함하는_게시글_정보를_List형식으로_반환한다() throws Exception {
+            //given
+            for (int i = 0; i < 5; i++) {
+                String nickname = "닉네임" + i;
+                String title = "제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                        title,
+                        content,
+                        isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            for (int i = 0; i < 5; i++) {
+                String nickname = "닉네임" + i;
+                String title = "검색제목" + i;
+                String content = "본문" + i;
+                boolean isChecked = false;
+
+                CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
+                        title,
+                        content,
+                        isChecked);
+
+                postService.createPost(createPostRequest);
+            }
+
+            //when
+            ResponseList posts = postService.searchPostsByTitle("검색제목");
+
+            //then
+            assertThat(posts.getCount()).isEqualTo(5);
+        }
     }
 
     @Nested
