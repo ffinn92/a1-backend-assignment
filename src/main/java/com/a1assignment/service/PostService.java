@@ -101,7 +101,7 @@ public class PostService {
 
 
     private void validateDuplicateNickname(CreatePostRequest createPostRequest) {
-        if(!Objects.isNull(postRepository.findByName(createPostRequest.getNickname()).orElse(null))) {
+        if(!Objects.isNull(postRepository.findByNickname(createPostRequest.getNickname()).orElse(null))) {
             throw new IllegalStateException("중복된 닉네임입니다.");
         }
     }
