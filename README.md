@@ -25,4 +25,5 @@
 게시글 삭제|DELETE|`/api/posts`|
 
 ## 4.테스트 사례
-![image](https://user-images.githubusercontent.com/92678171/227759669-58fb61cb-5a2e-4b05-aea6-f0e853145521.png)
+![image](https://user-images.githubusercontent.com/92678171/227778109-fe52e32e-9674-4704-bd63-2c39930d8213.png)
+
