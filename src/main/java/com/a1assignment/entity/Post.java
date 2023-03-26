@@ -24,30 +24,30 @@ public class Post extends BaseTime {
     private String content;
 
     @Column(nullable = false)
-    private boolean isChecked;
+    private boolean priority;
 
     @Column(nullable = false)
     private boolean isDeleted;
 
-    public Post(String nickname, String title, String content, boolean isChecked) {
+    public Post(String nickname, String title, String content, boolean priority) {
         this.nickname = nickname;
         this.title = title;
         this.content = content;
-        this.isChecked = isChecked;
+        this.priority = priority;
     }
 
-    public void updatePost(String nickname, String title, String content, boolean isChecked) {
+    public void updatePost(String nickname, String title, String content, boolean priority) {
         this.nickname = nickname;
         this.title = title;
         this.content = content;
-        this.isChecked = isChecked;
+        this.priority = priority;
     }
 
-    public void updatePostPriority(String nickname, String title, String content, boolean isChecked) {
+    public void updatePostPriority(String nickname, String title, String content, boolean priority) {
         this.nickname = nickname;
         this.title = title;
         this.content = content;
-        this.isChecked = isChecked;
+        this.priority = priority;
     }
 
     public void delete() {
