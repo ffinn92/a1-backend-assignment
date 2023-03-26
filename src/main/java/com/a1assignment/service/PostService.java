@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +22,7 @@ public class PostService {
         Post savedPost = postRepository.save(new Post(createPostRequest.getNickname(),
                                                       createPostRequest.getTitle(),
                                                       createPostRequest.getContent(),
-                                                      createPostRequest.isChecked()));
+                                                      createPostRequest.isPriority()));
         return savedPost.getId();
     }
 
@@ -34,7 +33,7 @@ public class PostService {
         post.updatePost(updatePostRequest.getNickname(),
                              updatePostRequest.getTitle(),
                              updatePostRequest.getContent(),
-                             updatePostRequest.isChecked());
+                             updatePostRequest.isPriority());
 
         return post.getId();
     }
@@ -45,13 +44,18 @@ public class PostService {
         post.updatePostPriority(updatePostPriorityRequest.getNickname(),
                 updatePostPriorityRequest.getTitle(),
                 updatePostPriorityRequest.getContent(),
-                updatePostPriorityRequest.isChecked());
+                updatePostPriorityRequest.isPriority());
 
         return post.getId();
     }
 
     public SearchPostResponse searchPost(Long id) {
-        return SearchPostResponse.searchPost(validateIsPostExist(id));
+        Post post = validateIsPostExist(id);
+        return new SearchPostResponse(post.getId(),
+                post.getNickname(),
+                post.getTitle(),
+                post.getContent(),
+                post.isPriority());
     }
 
     @Transactional(readOnly = true)

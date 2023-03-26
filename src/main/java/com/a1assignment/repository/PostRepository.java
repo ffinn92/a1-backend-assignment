@@ -7,13 +7,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("SELECT p FROM Post p WHERE p.nickname LIKE %:keyword% OR p.title LIKE %:keyword%")
+    @Query("SELECT p FROM Post p WHERE p.isDeleted = false AND (p.nickname LIKE %:keyword% OR p.title LIKE %:keyword%)")
     List<Post> findPostsByKeywords(@Param("keyword") String keyword);
 
-    Optional<Post> findByNickname(String nickname);
+    @Query("SELECT p FROM Post p WHERE p.isDeleted = false")
+    List<Post> findAll();
 }

@@ -6,7 +6,8 @@ function PostItem() {
   const [post, setPost] = useState();
 
   async function requestPost(postId) {
-    const GET_POST_URL = `https://a15c8e94-d677-49fb-910f-e2d7bafbd878.mock.pstmn.io/api/post/${postId}`;
+//     const GET_POST_URL = `https://a15c8e94-d677-49fb-910f-e2d7bafbd878.mock.pstmn.io/api/post/${postId}`;
+    const GET_POST_URL = `http://localhost:8080/api/posts/${postId}`;
     const response = await fetch(GET_POST_URL, {
       method: "GET",
     });
@@ -14,12 +15,19 @@ function PostItem() {
     setPost(data);
   }
 
-  async function deletePost(postId) {
-    const GET_DELETE_URL = `https://a15c8e94-d677-49fb-910f-e2d7bafbd878.mock.pstmn.io/api/post/{postId}`;
+  async function deletePost() {
+    console.log(post);
+//     const GET_DELETE_URL = `https://a15c8e94-d677-49fb-910f-e2d7bafbd878.mock.pstmn.io/api/post/{postId}`;
+    const GET_DELETE_URL = `http://localhost:8080/api/posts`;
+    const body = JSON.stringify({id:postId});
     await fetch(GET_DELETE_URL, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: body,
     });
-    window.alert(`${postId}번 게시물을 삭제했습니다. 뒤로가기를 눌러주세요.`);
+    window.alert(`게시물을 삭제했습니다. 뒤로가기를 눌러주세요.`);
   }
 
   useEffect(() => {

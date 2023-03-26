@@ -24,5 +24,7 @@ public class UpdatePostRequest {
 
     @NotBlank(message = "공백 입력은 불가합니다.")
     private String content;
-    private boolean isChecked;
+
+    @NotNull(message = "중요도 체크 정보는 필수 입니다.")
+    private boolean priority;
 }

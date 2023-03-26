@@ -35,11 +35,11 @@ class PostControllerTest extends BaseIntegrationTest {
             String nickname = "게시글 작성 테스트_닉네임";
             String title = "게시글 작성 테스트_제목";
             String content = "게시글 작성 테스트_본문";
-            boolean isChecked = false;
+            boolean priority = false;
             CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
                                                                         title,
                                                                         content,
-                                                                        isChecked);
+                                                                        priority);
 
             //when
             long savedPostId = postService.createPost(createPostRequest);
@@ -51,7 +51,7 @@ class PostControllerTest extends BaseIntegrationTest {
             assertThat(createPostRequest.getNickname()).isEqualTo(savedPost.getNickname());
             assertThat(createPostRequest.getTitle()).isEqualTo(savedPost.getTitle());
             assertThat(createPostRequest.getContent()).isEqualTo(savedPost.getContent());
-            assertThat(createPostRequest.isChecked()).isEqualTo(savedPost.isChecked());
+            assertThat(createPostRequest.isPriority()).isEqualTo(savedPost.isPriority());
         }
     }
 
@@ -65,12 +65,12 @@ class PostControllerTest extends BaseIntegrationTest {
             String nickname = "닉네임";
             String title = "제목";
             String content = "본문";
-            boolean isChecked = false;
+            boolean priority = false;
 
             CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
                     title,
                     content,
-                    isChecked);
+                    priority);
 
             long savedPostId = postService.createPost(createPostRequest);
 
@@ -82,7 +82,7 @@ class PostControllerTest extends BaseIntegrationTest {
             assertThat(searchedPost.getNickname()).isEqualTo(nickname);
             assertThat(searchedPost.getTitle()).isEqualTo(title);
             assertThat(searchedPost.getContent()).isEqualTo(content);
-            assertThat(searchedPost.isChecked()).isEqualTo(isChecked);
+            assertThat(searchedPost.isPriority()).isEqualTo(priority);
         }
 
         @Test
@@ -92,12 +92,12 @@ class PostControllerTest extends BaseIntegrationTest {
                 String nickname = "닉네임" + i;
                 String title = "제목" + i;
                 String content = "본문" + i;
-                boolean isChecked = false;
+                boolean priority = false;
 
                 CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
                         title,
                         content,
-                        isChecked);
+                        priority);
 
                 postService.createPost(createPostRequest);
             }
@@ -116,12 +116,12 @@ class PostControllerTest extends BaseIntegrationTest {
                 String nickname = "닉네임" + i;
                 String title = "제목" + i;
                 String content = "본문" + i;
-                boolean isChecked = false;
+                boolean priority = false;
 
                 CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
                         title,
                         content,
-                        isChecked);
+                        priority);
 
                 postService.createPost(createPostRequest);
             }
@@ -130,12 +130,12 @@ class PostControllerTest extends BaseIntegrationTest {
                 String nickname = "검색닉네임" + i;
                 String title = "제목" + i;
                 String content = "본문" + i;
-                boolean isChecked = false;
+                boolean priority = false;
 
                 CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
                         title,
                         content,
-                        isChecked);
+                        priority);
 
                 postService.createPost(createPostRequest);
             }
@@ -154,12 +154,12 @@ class PostControllerTest extends BaseIntegrationTest {
                 String nickname = "닉네임a" + i;
                 String title = "제목" + i;
                 String content = "본문" + i;
-                boolean isChecked = false;
+                boolean priority = false;
 
                 CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
                         title,
                         content,
-                        isChecked);
+                        priority);
 
                 postService.createPost(createPostRequest);
             }
@@ -168,12 +168,12 @@ class PostControllerTest extends BaseIntegrationTest {
                 String nickname = "닉네임b" + i;
                 String title = "검색제목" + i;
                 String content = "본문" + i;
-                boolean isChecked = false;
+                boolean priority = false;
 
                 CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
                         title,
                         content,
-                        isChecked);
+                        priority);
 
                 postService.createPost(createPostRequest);
             }
@@ -197,9 +197,9 @@ class PostControllerTest extends BaseIntegrationTest {
             String nickname = "게시글 수정 테스트_기존 닉네임";
             String title = "게시글 수정 테스트_기존 제목";
             String content = "게시글 수정 테스트_기존 본문";
-            boolean isChecked = false;
+            boolean priority = false;
 
-            Post post = new Post(nickname, title, content, isChecked);
+            Post post = new Post(nickname, title, content, priority);
             ReflectionTestUtils.setField(post, "id", id);
 
             Post savedPost = postRepository.save(post);
@@ -209,7 +209,7 @@ class PostControllerTest extends BaseIntegrationTest {
                                                                         savedPost.getNickname(),
                                                                         updateTile,
                                                                         savedPost.getContent(),
-                                                                        savedPost.isChecked());
+                                                                        savedPost.isPriority());
 
             //when
             long updatedPostId = postService.updatePost(updatePostRequest);
@@ -222,7 +222,7 @@ class PostControllerTest extends BaseIntegrationTest {
             assertThat(updatePostRequest.getNickname()).isEqualTo(updatedPost.getNickname());
             assertThat(updatePostRequest.getTitle()).isEqualTo(updatedPost.getTitle());
             assertThat(updatePostRequest.getContent()).isEqualTo(updatedPost.getContent());
-            assertThat(updatePostRequest.isChecked()).isEqualTo(updatedPost.isChecked());
+            assertThat(updatePostRequest.isPriority()).isEqualTo(updatedPost.isPriority());
         }
 
         @Test
@@ -232,9 +232,9 @@ class PostControllerTest extends BaseIntegrationTest {
             String nickname = "게시글 수정 테스트_기존 닉네임";
             String title = "게시글 수정 테스트_기존 제목";
             String content = "게시글 수정 테스트_기존 본문";
-            boolean isChecked = false;
+            boolean priority = false;
 
-            Post post = new Post(nickname, title, content, isChecked);
+            Post post = new Post(nickname, title, content, priority);
             ReflectionTestUtils.setField(post, "id", id);
 
             Post savedPost = postRepository.save(post);
@@ -244,7 +244,7 @@ class PostControllerTest extends BaseIntegrationTest {
                                                                         savedPost.getNickname(),
                                                                         savedPost.getTitle(),
                                                                         updateContent,
-                                                                        savedPost.isChecked());
+                                                                        savedPost.isPriority());
 
             //when
             long updatedPostId = postService.updatePost(updatePostRequest);
@@ -257,7 +257,7 @@ class PostControllerTest extends BaseIntegrationTest {
             assertThat(updatePostRequest.getNickname()).isEqualTo(updatedPost.getNickname());
             assertThat(updatePostRequest.getTitle()).isEqualTo(updatedPost.getTitle());
             assertThat(updatePostRequest.getContent()).isEqualTo(updatedPost.getContent());
-            assertThat(updatePostRequest.isChecked()).isEqualTo(updatedPost.isChecked());
+            assertThat(updatePostRequest.isPriority()).isEqualTo(updatedPost.isPriority());
         }
 
         @Test
@@ -267,19 +267,19 @@ class PostControllerTest extends BaseIntegrationTest {
             String nickname = "게시글 수정 테스트_기존 닉네임";
             String title = "게시글 수정 테스트_기존 제목";
             String content = "게시글 수정 테스트_기존 본문";
-            boolean isChecked = false;
+            boolean priority = false;
 
-            Post post = new Post(nickname, title, content, isChecked);
+            Post post = new Post(nickname, title, content, priority);
             ReflectionTestUtils.setField(post, "id", id);
 
             Post savedPost = postRepository.save(post);
 
-            boolean isCheckedUpate = true;
+            boolean priorityUpdate = true;
             UpdatePostRequest updatePostRequest = new UpdatePostRequest(savedPost.getId(),
                     savedPost.getNickname(),
                     savedPost.getTitle(),
                     savedPost.getContent(),
-                    isCheckedUpate);
+                    priorityUpdate);
 
             //when
             long updatedPostId = postService.updatePost(updatePostRequest);
@@ -292,8 +292,8 @@ class PostControllerTest extends BaseIntegrationTest {
             assertThat(updatePostRequest.getNickname()).isEqualTo(updatedPost.getNickname());
             assertThat(updatePostRequest.getTitle()).isEqualTo(updatedPost.getTitle());
             assertThat(updatePostRequest.getContent()).isEqualTo(updatedPost.getContent());
-            assertThat(updatePostRequest.isChecked()).isEqualTo(updatedPost.isChecked());
-            assertThat(updatePostRequest.isChecked()).isTrue();
+            assertThat(updatePostRequest.isPriority()).isEqualTo(updatedPost.isPriority());
+            assertThat(updatePostRequest.isPriority()).isTrue();
         }
 
         @Test
@@ -303,9 +303,9 @@ class PostControllerTest extends BaseIntegrationTest {
             String nickname = "게시글 수정 테스트_기존 닉네임";
             String title = "게시글 수정 테스트_기존 제목";
             String content = "게시글 수정 테스트_기존 본문";
-            boolean isChecked = false;
+            boolean priority = false;
 
-            Post post = new Post(nickname, title, content, isChecked);
+            Post post = new Post(nickname, title, content, priority);
             ReflectionTestUtils.setField(post, "id", id);
 
             Post savedPost = postRepository.save(post);
@@ -316,7 +316,7 @@ class PostControllerTest extends BaseIntegrationTest {
                                                                         savedPost.getNickname(),
                                                                         savedPost.getTitle(),
                                                                         updateContent,
-                                                                        savedPost.isChecked());
+                                                                        savedPost.isPriority());
 
             //then
             assertThatThrownBy(() -> postService.updatePost(updatePostRequest)).isInstanceOf(NoSuchElementException.class);
@@ -333,11 +333,11 @@ class PostControllerTest extends BaseIntegrationTest {
             String nickname = "게시글 작성 테스트_닉네임";
             String title = "게시글 작성 테스트_제목";
             String content = "게시글 작성 테스트_본문";
-            boolean isChecked = false;
+            boolean priority = false;
             CreatePostRequest createPostRequest = new CreatePostRequest(nickname,
                     title,
                     content,
-                    isChecked);
+                    priority);
 
             long savedPostId = postService.createPost(createPostRequest);
             DeletePostRequest deletePostRequest = new DeletePostRequest(savedPostId);
@@ -357,9 +357,9 @@ class PostControllerTest extends BaseIntegrationTest {
             String nickname = "게시글 수정 테스트_기존 닉네임";
             String title = "게시글 수정 테스트_기존 제목";
             String content = "게시글 수정 테스트_기존 본문";
-            boolean isChecked = false;
+            boolean priority = false;
 
-            Post post = new Post(nickname, title, content, isChecked);
+            Post post = new Post(nickname, title, content, priority);
             ReflectionTestUtils.setField(post, "id", id);
 
             postRepository.save(post);

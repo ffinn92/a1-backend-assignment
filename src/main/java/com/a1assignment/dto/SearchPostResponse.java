@@ -10,14 +10,14 @@ public class SearchPostResponse {
     private final String nickname;
     private final String title;
     private final String content;
-    private final boolean isChecked;
+    private final boolean priority;
 
-    public SearchPostResponse(Long id, String nickname, String title, String content, boolean isChecked) {
+    public SearchPostResponse(Long id, String nickname, String title, String content, boolean priority) {
         this.id = id;
         this.nickname = nickname;
         this.title = title;
         this.content = content;
-        this.isChecked = isChecked;
+        this.priority = priority;
     }
 
     public static SearchPostResponse searchPost(Post post) {
@@ -26,7 +26,7 @@ public class SearchPostResponse {
                 post.getNickname(),
                 post.getTitle(),
                 post.getContent(),
-                post.isChecked()
+                post.isPriority()
         );
     }
 
@@ -36,7 +36,7 @@ public class SearchPostResponse {
                 post.getNickname(),
                 post.getTitle(),
                 " ",
-                post.isChecked()
+                post.isPriority()
         );
     }
 }
