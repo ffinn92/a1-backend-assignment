@@ -3,21 +3,19 @@ import { Link } from "react-router-dom";
 
 function PostList() {
   const [posts, setPosts] = useState([]);
-  const [page, setPage] = useState(0);
   const [searchKeyword, setSearchKeyword] = useState("");
 
-  async function requestPosts(page) {
-    const GET_POSTS_URL = `http://a15c8e94-d677-49fb-910f-e2d7bafbd878.mock.pstmn.io/api/posts?page=${page}&size=10`;
+  async function requestPosts() {
+    const GET_POSTS_URL = `http://localhost:8080/api/posts`;
     const response = await fetch(GET_POSTS_URL, {
       method: "GET",
     });
     const data = await response.json();
     setPosts(data.content);
-    setPage(page);
   }
 
-  async function searchPosts(title) {
-    const SEARCH_POSTS_URL = `https://a15c8e94-d677-49fb-910f-e2d7bafbd878.mock.pstmn.io/api/posts?title=${title}&page=0&size=10}`;
+  async function searchPosts(keyword) {
+    const SEARCH_POSTS_URL = `http://localhost:8080/api/posts/keywords?keyword=${keyword}`;
     const response = await fetch(SEARCH_POSTS_URL, {
       method: "GET",
     });
@@ -40,7 +38,7 @@ function PostList() {
       >
         <div style={{ display: "flex", alignItems: "center" }}>
           <input
-            placeholder="title로 검색해보세요."
+            placeholder="검색해보세요."
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
           <button
@@ -76,7 +74,7 @@ function PostList() {
             padding: "0 10px",
             border: "1px solid grey",
             alignItems: "center",
-            backgroundColor: post.isChecked ? "lightskyblue" : "white",
+            backgroundColor: post.priority ? "lightskyblue" : "white",
             color: "black",
           }}
         >
@@ -87,18 +85,6 @@ function PostList() {
       <div
         style={{ display: "flex", justifyContent: "space-between", gap: "4px" }}
       >
-        <button
-          style={{ height: "30px" }}
-          onClick={() => requestPosts(page - 1)}
-        >
-          prev page
-        </button>
-        <button
-          style={{ height: "30px" }}
-          onClick={() => requestPosts(page + 1)}
-        >
-          next page
-        </button>
       </div>
     </div>
   );

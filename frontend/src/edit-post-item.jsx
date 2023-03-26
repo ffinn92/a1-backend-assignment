@@ -6,7 +6,7 @@ function EditPostItem() {
   const [post, setPost] = useState();
 
   async function requestPost(postId) {
-    const GET_POST_URL = `https://a15c8e94-d677-49fb-910f-e2d7bafbd878.mock.pstmn.io/api/post/${postId}`;
+    const GET_POST_URL = `http://localhost:8080/api/posts/${postId}`;
     const response = await fetch(GET_POST_URL, {
       method: "GET",
     });
@@ -14,16 +14,19 @@ function EditPostItem() {
     setPost(data);
   }
 
-  async function updatePost(postId) {
-    const UPDATE_POST_URL = `https://a15c8e94-d677-49fb-910f-e2d7bafbd878.mock.pstmn.io/api/post/${postId}`;
+  async function updatePost() {
+    const UPDATE_POST_URL = `http://localhost:8080/api/posts`;
     const body = JSON.stringify(post);
     const response = await fetch(UPDATE_POST_URL, {
-      method: "POST",
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: body,
     });
     const data = await response.json();
     setPost(data);
-    window.alert(`${postId}번 게시물을 수정했습니다.`);
+    window.alert(`게시물을 수정했습니다. 뒤로가기를 눌러주세요.`);
   }
 
   useEffect(() => {
@@ -33,7 +36,7 @@ function EditPostItem() {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <p style={{ border: "1px solid black" }}>
-        titile:{" "}
+        title:{" "}
         <input
           value={post?.title}
           onChange={(e) =>
@@ -67,16 +70,16 @@ function EditPostItem() {
           type="checkbox"
           id="priority"
           name="priority"
-          checked={post?.isChecked}
+          checked={post?.priority}
           onChange={() => {
             setPost((prev) => {
-              return { ...prev, isChecked: !prev.isChecked };
+              return { ...prev, priority: !prev.priority };
             });
           }}
         />
         <label for="priority">중요 게시물 여부</label>
       </div>
-      <button style={{ height: "30px" }} onClick={() => updatePost(postId)}>
+      <button style={{ height: "30px" }} onClick={() => updatePost()}>
         확인
       </button>
     </div>

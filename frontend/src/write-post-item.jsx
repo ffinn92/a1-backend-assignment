@@ -5,25 +5,29 @@ function WritePostItem() {
     title: "",
     content: "",
     nickname: localStorage.getItem("MY_NICKNAME"),
+    priority: false,
   });
 
   async function updatePost() {
-    const UPLOAD_POST_URL = `https://a15c8e94-d677-49fb-910f-e2d7bafbd878.mock.pstmn.io/api/post`;
+    const UPLOAD_POST_URL = `http://localhost:8080/api/posts`;
     const body = JSON.stringify(post);
     const response = await fetch(UPLOAD_POST_URL, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: body,
     });
     const data = await response.json();
     setPost(data);
     localStorage.setItem("MY_NICKNAME", post.nickname);
-    window.alert(`게시물을 등록했습니다.`);
+    window.alert(`게시물을 등록했습니다. 뒤로가기를 눌러주세요.`);
   }
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <p style={{ border: "1px solid black" }}>
-        titile:{" "}
+        title:{" "}
         <input
           value={post?.title}
           onChange={(e) =>
@@ -67,10 +71,10 @@ function WritePostItem() {
           type="checkbox"
           id="priority"
           name="priority"
-          checked={post?.isChecked}
+          checked={post?.priority}
           onChange={() => {
             setPost((prev) => {
-              return { ...prev, isChecked: !prev.isChecked };
+              return { ...prev, priority: !prev.priority };
             });
           }}
         />
